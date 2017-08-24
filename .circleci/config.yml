@@ -9,7 +9,7 @@ jobs:
 
       - deploy:
             command: |
-                echo "dev $CIRCLE_JOB $CIRCLE_SHA1 $CIRCLE_BUILD_NUM" | ssh circleci@vpn.token.io -T
+                echo "dev $CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 $CIRCLE_BUILD_NUM" | ssh circleci@vpn.token.io -T
 
 workflows:
   version: 2
