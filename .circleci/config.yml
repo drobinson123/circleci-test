@@ -2,14 +2,39 @@ version: 2
 jobs:
   build:
     docker:
-      - image: tokenio/circleci
+      - image: circleci/golang:1.8
 
     steps:
+      - setup_remote_docker
       - checkout
+      - run:
+            command: ./build.sh
 
-      - deploy:
-            command: |
-                echo "dev $CIRCLE_PROJECT_REPONAME $CIRCLE_SHA1 $CIRCLE_BUILD_NUM" | ssh circleci@vpn.token.io -T
+  deploy_dev:
+    steps:
+      - run:
+            command: ./deploy.sh dev
+
+  deploy_stg:
+    steps:
+      - run:
+            command: ./deploy.sh stg
+
+  deploy_int:
+    steps:
+      - run:
+            command: ./deploy.sh int
+
+  deploy_sbx:
+    steps:
+      - run:
+            command: ./deploy.sh sbx
+
+
+  deploy_prd:
+    steps:
+      - run:
+            command: ./deploy.sh prd
 
 workflows:
   version: 2
@@ -17,3 +42,26 @@ workflows:
     jobs:
       - build:
           context: org-global
+      - deploy_dev:
+          context: org-global
+          requires:
+            - build
+      - deploy_stg:
+          context: org-global
+          requires:
+            - deploy_dev
+      - deploy_int:
+          context: org-global
+          type: approval
+          requires:
+            - deploy_stg
+      - deploy_sbx:
+          context: org-global
+          type: approval
+          requires:
+            - deploy_stg
+      - deploy_prd:
+          context: org-global
+          type: approval
+          requires:
+            - deploy_stg
