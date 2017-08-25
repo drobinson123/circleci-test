@@ -3,7 +3,6 @@ jobs:
   build:
     docker:
       - image: circleci/golang:1.8
-
     steps:
       - setup_remote_docker
       - checkout
@@ -11,27 +10,36 @@ jobs:
             command: ./build.sh
 
   deploy_dev:
+    docker:
+      - image: circleci/golang:1.8
     steps:
       - run:
             command: ./deploy.sh dev
 
   deploy_stg:
+    docker:
+      - image: circleci/golang:1.8
     steps:
       - run:
             command: ./deploy.sh stg
 
   deploy_int:
+    docker:
+      - image: circleci/golang:1.8
     steps:
       - run:
             command: ./deploy.sh int
 
   deploy_sbx:
+    docker:
+      - image: circleci/golang:1.8
     steps:
       - run:
             command: ./deploy.sh sbx
 
-
   deploy_prd:
+    docker:
+      - image: circleci/golang:1.8
     steps:
       - run:
             command: ./deploy.sh prd
